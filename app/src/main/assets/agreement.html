@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        *{
+        margin: 0;
+        padding: 0;
+        }
+        #bg{
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #ccc6b5;
+        opacity: 0.5;
+        z-index: 1;
+        }
+        #dialog{
+        position: absolute;
+        left: 5%;
+        top: 5%;
+        background: #F6F6F6;
+        border-radius: 15px;
+        z-index: 10;
+        width: 90%;
+        height: 90%;
+        overflow-y: scroll;
+        border: 1px solid #CCC9C0;
+        box-shadow: 5px 5px 5px rgba(193,193,193,.5);
+        }
+        #dialog h1{
+        text-align: center;
+        font-size: 2em;
+        margin: 5% 0;
+        }
+        #dialog p{
+        text-indent: 2em;
+        font-size: 1.2em;
+        width: 90%;
+        margin: 0 auto;
+        line-height: 2em;
+        font-family: Microsoft YaHei Arial;
+        }
+        #btn{
+        width:20em;
+        margin: 0 auto;
+        padding: 30px 0 50px 0;
+        }
+        #btn input{
+        margin: 0 auto;
+        margin-left: 2em;
+        }
+        input[type=button]{
+        border: none;
+        padding: 1em 1.8em;
+        font-size: 1em;
+        background: lightblue;
+        border-radius: 0.5em;
+        }
+        input[value="取消"]{
+        border: none;
+        background: darkorange;
+        }
+        .shut{
+        width: 1em;
+        position: absolute;
+        right: 5%;
+        top: 2%;
+        }
+    </style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="dialog">
+    <img src="close.png" class="close shut" alt="" onclick="layer()"/>
+    <h1>麦子用户协议</h1>
+    <p>
+        麦子学院就业服务协议甲方：成都麦子信息技术作为国内IT在线教育创新领导品牌，
+        甲方将向乙方提供技术教学及就业服务。为清晰培训过程、提高培训质量，经双方沟通协商，
+        甲、乙双方签订以下协议。甲方为本项目提供优质的教学、服务和管理，并承诺在完成本项目学习
+        后获得良好的就业结果！一、甲方责任、权利和义务1、甲方有责任在乙方培训期间，
+        按照《学员学习异动管理条例》及学员相关管理规定对乙方进行严格管理，
+        并根据规定对乙方表现进行评定考核；2、甲方承诺向乙方提供符合要求的技能培养内容和考核体系，
+        并提供符合企业需求的相关培训课程，课程内容全部来源于国内外一线大师亲自设计制作；
+        3、甲方承诺配备技术导师、班主任、就业辅导老师为学生提供教学、学习、就业服务管理；
+        4、甲方承诺对于遵守并通过相关培训项目制作及考核的毕业学员，进入麦子学院雇主人才库，
+        并做好就业安置与推荐服务，就业薪资不限城市（大学专、本科学历）不低于5000元/月（税前）；
+        5、如非乙方原因导致面试成功但未能通过1个月试用期（经甲方核实），甲方继续为乙方提供岗位机会
+        ；6、乙方参加培训后加入麦子学院实名交友圈，甲方为乙方提供终身的职业生涯跟踪指导服务，
+        毕业后可在就业、转行、跳槽、升职等向甲方提出咨询，甲方将进行相关服务；
+        7、甲方将联合全国部分创业孵化基地、国腾园、天府软件园等全国科技园区提供创业孵化咨询与服务
+        。二、乙方责任、权利和义务1、乙方参加本项目后，须遵守《学员学习异动管理条例》及学员相关管
+        理规定，同时积极配合各项教学计划，努力学习；2、乙方应承担实训期间的所有费用，
+        并按照甲方要求进行入学、学习、就业等各项工作。三、就业服务标准学员同时满足以下四个条件
+        方可享受甲方提供的就业服务：1、完成所有课程（项目制作、模拟面试等）并完成毕业考核；2
+        、培训费用已缴清；3、提供《就业问卷调查表》和《个人简历》；4、观看就业指导课全部课程。
+        四、有以下几种情况，不再提供就业服务1、乙方在获得甲方的面试通知后，不得私自放弃或更换他人
+        ，不得无故迟到和缺席，否则甲方有权取消乙方此后的推荐机会，甲方基于本合同的义务终止；
+        2、乙方因疾病或心理生理障碍等不可抗拒因素而导致无法就业，则甲方不承担就业帮助义务。
+        五、培训后退款1、如乙方遵守《学员学习异动管理条例》及相关学员管理规定并通过考核顺利结业后
+        ，6个月内未能在对口岗位工作，可由乙方提出申请，经甲方核实后，甲方将全额退还乙方所有培训
+        费用；2、就业未达标全额退费周期为：乙方提出退费申请后1个月内。六、不可抗力条款
+        对不可抗力所造成的影响，双方应及时协商解决办法和补救措施。因不可抗力不能履行协议的一方，应尽力采取合理措施减轻可能给对方造成的损失
+        ，否则应对由此而扩大的损失承担赔偿责任。本协议所称不可抗力，是指不能预见、不能避免、并不能克服的客观情况，如重大疾病、
+        自然灾害、瘟疫、战争、骚乱等。七、适用法律及争议解决方法1、甲方拥有对本协议的解释权
+        ，协议的履行、解释及争议解决均适用中华人民共和国有关法律；2、双方在履行本协议中如发
+        生争议，应先由双方协商解决。如协商不成，依法向甲方所在地人民法院提起诉讼。八
+        、协议的补充、变更、修改对本协议的任何补充、变更、修改应采用书面补充协议形式。
+        补充协议在双方签署后与本协议具有同等法律效力。九、生效及终止条款1、本协议由学员点击“
+        我已经阅读并同意以上协议”即生效。2、甲乙双方履行本协议的权利和义务后，协议终止。
+    </p>
+    <div id="btn">
+        <input type="button" id="sure" value="确定" onclick="clos()"/>
+        <input type="button" class="close" value="取消" onclick="layer()"/>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var close = document.getElementsByClassName("close");
+    var sure = document.getElementById("sure");
+    var bg = document.getElementById("bg");
+    var dialog = document.getElementById("dialog");
+
+	function clos(){
+        dialog.style.display = "none";
+        bg.style.display = "none";
+        return true;
+    };
+	function layer(){
+        myObj.fun1FromAndroid("我是js调用Android的方法");
+        }
+</script>
+</body>
+</html>

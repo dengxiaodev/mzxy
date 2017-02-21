@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp">
+
+    <ImageView
+        android:id="@+id/fr_basket_frame"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/fragment_laundry_frame" />
+
+    <ImageView
+        android:id="@+id/fr_basket_clothes"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:src="@mipmap/fragment_clothes1" />
+
+    <TextView
+        android:id="@+id/fr_basket_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/fr_basket_frame"
+        android:text="T恤"
+        android:textSize="22sp" />
+
+    <ImageView
+        android:id="@+id/fr_basket_less"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/fr_basket_frame"
+        android:background="@drawable/fragment_laundry_cuts"
+        android:src="@drawable/fragment_laundry_cuts_normal"/>
+
+    <TextView
+        android:id="@+id/fr_basket_num"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/fr_basket_less"
+        android:background="@drawable/fragment_laundry_num"
+        android:paddingLeft="15dp"
+        android:paddingTop="7dp"
+        android:text="1" />
+
+    <ImageView
+        android:id="@+id/fr_basket_plus"
+        android:layout_width="35dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/fr_basket_num"
+
+        android:background="@drawable/fragment_laundry_plus"
+        android:src="@drawable/fragment_laundry_plus_normal" />
+
+    <TextView
+        android:id="@+id/fr_basket_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fr_basket_plus"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="10dp"
+        android:text="×"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/fr_basket_amounts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/fr_basket_text2"
+        android:text="￥14"
+        android:textColor="@color/orange"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/fr_basket_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:src="@mipmap/fragment_laundry_canceled" />
+
+
+</RelativeLayout>

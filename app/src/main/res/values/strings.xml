@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">麦子洗衣</string>
+    <string-array name="me_grid_names">
+        <item>我的订单</item>
+        <item>洗衣币</item>
+        <item>我的地址</item>
+        <item>分享推荐码</item>
+        <item>验证推荐码</item>
+    </string-array>
+</resources>

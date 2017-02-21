@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayLight"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/share_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="分享优惠码"
+            android:textColor="@color/textBlack"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@mipmap/preferential" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:text="邀请好友，获取免费洗衣机会"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/lines"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/invite"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/preferential"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lines"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="45dp"
+            android:text="优惠码"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/preferential"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="15dp"
+            android:text="2828"
+            android:textColor="@color/orange"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/share_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/num"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="40dp"
+            android:src="@mipmap/fragment_me_grid4" />
+    </RelativeLayout>
+</LinearLayout>

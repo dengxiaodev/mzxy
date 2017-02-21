@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayLight">
+
+    <LinearLayout
+        android:id="@+id/pink"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingLeft="25dp"
+            android:paddingTop="20dp"
+            android:background="@color/pink">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="快快洗金额（元）"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/pay_amounts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="480.00"
+                android:textColor="@color/white"
+                android:textSize="40sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/bg_red"
+            android:text="充值"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_below="@id/pink"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="35dp"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/pay_edit1"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_pay"
+                    android:cursorVisible="false"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:paddingLeft="25dp"
+                    android:password="true" />
+
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <EditText
+                    android:id="@+id/pay_edit2"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_pay"
+                    android:cursorVisible="false"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:paddingLeft="25dp"
+                    android:password="true" />
+
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <EditText
+                    android:id="@+id/pay_edit3"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_pay"
+                    android:cursorVisible="false"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:paddingLeft="25dp"
+                    android:password="true" />
+
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <EditText
+                    android:id="@+id/pay_edit4"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_pay"
+                    android:cursorVisible="false"
+                    android:inputType="numberPassword"
+                    android:maxLength="1"
+                    android:paddingLeft="25dp"
+                    android:password="true" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/pay_relative"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/text_pass_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:text="请输入支付密码"
+            android:textColor="@color/textBlack"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/text_pass_word"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/gray" />
+
+        <Button
+            android:id="@+id/pay_sure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/blue"
+            android:text="确认支付"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/pay_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/password"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/btn_pay"
+        android:paddingBottom="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:text="重制支付密码" />
+
+
+
+</RelativeLayout>
