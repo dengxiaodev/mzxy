@@ -43,6 +43,7 @@
         android:padding="10dp" />
 
     <Button
+        android:id="@+id/opinion_commit"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"

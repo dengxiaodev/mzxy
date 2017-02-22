@@ -89,7 +89,7 @@ public class FragmentMore extends Fragment implements View.OnClickListener, Acti
             case R.id.fragment_more_reached://联系客服
                 ActionSheet.createBuilder(getContext(), getActivity().getSupportFragmentManager())
                         .setCancelButtonTitle("取消")
-                        .setOtherButtonTitles("您确定拨打该电话吗?\n客服电话:1388888888", "确认")
+                        .setOtherButtonTitles("客服电话:1388888888", "确认拨打")
                         .setCancelableOnTouchOutside(true)
                         .setListener(this)
                         .show();
