@@ -9,9 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,6 +123,7 @@ public class FragmentMore extends Fragment implements View.OnClickListener, Acti
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("DIAL", "onRequestPermissionsResult:1111111");
                     callReached();
                 } else {
                     Toast.makeText(getContext(), "您需要同意通话权限后再重试!", Toast.LENGTH_SHORT).show();
@@ -143,7 +144,8 @@ public class FragmentMore extends Fragment implements View.OnClickListener, Acti
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{
+                Log.e("DIAL", "onRequestPermissionsResult:222222");
+                FragmentMore.this.requestPermissions(new String[]{
                         Manifest.permission.CALL_PHONE}, 1); //第三个参数为requestCode
             } else {
                 callReached();
@@ -154,7 +156,7 @@ public class FragmentMore extends Fragment implements View.OnClickListener, Acti
     //拨打客服电话
     public void callReached() {
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_CALL);
+        intent.setAction(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:1388888888"));
         startActivity(intent);
     }

@@ -4,10 +4,11 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
-import com.example.mzxy.smart.SmartImageView;
 import com.example.mzxy.utils.WinterJean;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class WinterAdapter extends BaseAdapter {
         if (convertView==null){
             holder = new ViewHolder();
             convertView = View.inflate(context, R.layout.winter_adapter_item,null);
-            holder.springImage = (SmartImageView) convertView.findViewById(R.id.spring_image);
+            holder.springImage = (ImageView) convertView.findViewById(R.id.spring_image);
             holder.springName = (TextView) convertView.findViewById(R.id.spring_name);
             holder.springAmount = (TextView) convertView.findViewById(R.id.spring_price);
             convertView.setTag(holder);
@@ -54,13 +55,14 @@ public class WinterAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         WinterJean.WashInfoEntity infoEntity = list.get(position);
-        holder.springImage.setImageUrl(infoEntity.getWashHead(),R.mipmap.ic_launcher,R.mipmap.error);
+//        holder.springImage.setImageUrl(infoEntity.getWashHead(),R.mipmap.ic_launcher,R.mipmap.error);
+        Glide.with(context).load(infoEntity.getWashHead()).into(holder.springImage);
         holder.springName.setText(infoEntity.getWashName());
         holder.springAmount.setText(infoEntity.getAmount());
         return convertView;
     }
     public static class ViewHolder{
-        public SmartImageView springImage;
+        public ImageView springImage;
         public TextView springName;
         public TextView springAmount;
     }

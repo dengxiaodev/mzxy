@@ -18,9 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
 import com.example.mzxy.adapter.WinterAdapter;
-import com.example.mzxy.smart.SmartImageView;
 import com.example.mzxy.utils.LaundryUtils;
 import com.example.mzxy.utils.WinterJean;
 import com.example.mzxy.view.HomeActivity;
@@ -30,6 +30,8 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static anetwork.channel.http.NetworkSdkSetting.context;
 
 public class FragmentWinter extends Fragment implements View.OnClickListener {
     private View view;
@@ -41,7 +43,7 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
     private View popView;
     private PopupWindow window;
     private TextView unit;
-    private SmartImageView fr_home_picture;
+    private ImageView fr_home_picture;
     private TextView fr_home_bag;
     private TextView fr_home_amounts;
     private ImageView fr_home_less;
@@ -88,7 +90,7 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
         });
         unit = (TextView) popView.findViewById(R.id.textUnit);
         unit.setText(" /件");
-        fr_home_picture = (SmartImageView) popView.findViewById(R.id.fr_home_picture);
+        fr_home_picture = (ImageView) popView.findViewById(R.id.fr_home_picture);
         fr_home_bag = (TextView) popView.findViewById(R.id.fr_home_bag);
         fr_home_amounts = (TextView) popView.findViewById(R.id.fr_home_amounts);
         fr_home_less = (ImageView) popView.findViewById(R.id.fr_home_less);
@@ -115,7 +117,9 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
     }
 
     private void showPopWindow(int position) {
-        fr_home_picture.setImageUrl(infoEntityList.get(position).getWashHead(), R.mipmap.ic_launcher, R.mipmap.error);
+        Glide.with(context).load(infoEntityList.get(position).getWashHead()).into(fr_home_picture);
+
+//        fr_home_picture.setImageUrl(infoEntityList.get(position).getWashHead(), R.mipmap.ic_launcher, R.mipmap.error);
         fr_home_bag.setText(infoEntityList.get(position).getWashName());
         fr_home_amounts.setText(infoEntityList.get(position).getAmount());
     }

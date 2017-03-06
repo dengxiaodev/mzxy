@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <com.example.mzxy.smart.SmartImageView
+        <ImageView
             android:id="@+id/spring_image"
             android:layout_width="60dp"
             android:layout_height="60dp"

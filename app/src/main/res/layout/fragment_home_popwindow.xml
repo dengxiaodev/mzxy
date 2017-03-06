@@ -26,7 +26,7 @@
             android:layout_marginTop="20dp"
             android:src="@mipmap/fragment_page_bagframe" />
 
-        <com.example.mzxy.smart.SmartImageView
+        <ImageView
             android:id="@+id/fr_home_picture"
             android:layout_width="140dp"
             android:layout_height="140dp"
