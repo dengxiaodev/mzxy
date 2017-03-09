@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +21,16 @@ import android.widget.Toast;
 import com.example.mzxy.R;
 import com.example.mzxy.adapter.HomeAdapter;
 import com.example.mzxy.utils.CountEvent;
+import com.example.mzxy.utils.HttpUtils;
 import com.example.mzxy.utils.LaundryUtils;
+import com.example.mzxy.utils.ListLaundry;
 import com.example.mzxy.utils.WinterJean;
 import com.example.mzxy.view.HomeActivity;
 import com.example.mzxy.view.MeansActivity;
 import com.example.mzxy.view.WashActivity;
-import com.example.mzxy.welcome.GetDataByVolley;
-import com.example.mzxy.welcome.MyApplication;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -38,8 +38,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
-
-import static com.android.volley.VolleyLog.TAG;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/1/23 0023.
@@ -250,21 +251,22 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
                 startActivity(singleIntent);
                 break;
             case R.id.bag_wash://袋洗
-                GetDataByVolley.getStringByGet(URL, "FragmentHome", new GetDataByVolley.CallBack() {
+                HttpUtils.sendOKHttpRequest(URL, new Callback() {
                     @Override
-                    public void returnData(Object result) {
-                        if (result == null) {
-                            Toast.makeText(getActivity(), "请检查网络", Toast.LENGTH_SHORT).show();
-                            Log.e(TAG, "袋洗网络请求失败");
-                        } else {
-                            Gson gson = new Gson();
-                            WinterJean winterJean = gson.fromJson((String) result, WinterJean.class);
-                            washInfo = new ArrayList<>();
-                            washInfo = winterJean.washInfo;
-                        }
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "请检查网络", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseText = response.body().string();
+                        Gson gson = new Gson();
+                        WinterJean winterJean = gson.fromJson(responseText,WinterJean.class);
+                        washInfo = new ArrayList<WinterJean.WashInfoEntity>();
+                        washInfo = winterJean.washInfo;
                     }
                 });
-
                 if (window != null && window.isShowing()) {
                     window.dismiss();
                 } else {
@@ -299,8 +301,8 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
                     Boolean isRepeat = isRepeatData();
                     String name = (String) fr_home_bag.getText();
                     if (isRepeat) {
-                        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-                            laundryUtils = MyApplication.washJavas.get(i);
+                        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+                            laundryUtils = ListLaundry.washJavas.get(i);
                             if (name.equals(laundryUtils.getPictureName())) {
                                 String s1 = laundryUtils.getCount();
                                 int a1 = Integer.parseInt(s1);
@@ -315,7 +317,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
                         utils.setCount((String) fr_home_num.getText());
                         utils.setPictureName((String) fr_home_bag.getText());
                         utils.setAmounts((String) fr_home_amounts.getText());
-                        MyApplication.washJavas.add(utils);
+                        ListLaundry.washJavas.add(utils);
                     }
                     EventBus.getDefault().post(new CountEvent(4));
                     window.dismiss();
@@ -328,8 +330,8 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
 
     private Boolean isRepeatData() {
         String name = (String) fr_home_bag.getText();
-        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-            laundryUtils = MyApplication.washJavas.get(i);
+        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+            laundryUtils = ListLaundry.washJavas.get(i);
             if (name.equals(laundryUtils.getPictureName())) {
                 return true;
             }

@@ -7,9 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
 import com.example.mzxy.utils.Means;
-import com.example.mzxy.welcome.GetDataByVolley;
 
 import java.util.List;
 
@@ -53,8 +53,12 @@ public class MeansAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         Means.MeansInfoBean infoBean = list.get(position);
-        GetDataByVolley.loaderImage(infoBean.getImageMeans(),
-                holder.means_Image, R.mipmap.ic_launcher, R.mipmap.error);
+        Glide.with(context)
+                .load(infoBean.getImageMeans())
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.error)
+                .override(30, 30)
+                .into(holder.means_Image);
         holder.means_Text.setText(infoBean.getTextMeans());
         return convertView;
     }

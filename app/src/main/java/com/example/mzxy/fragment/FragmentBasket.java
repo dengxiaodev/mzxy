@@ -1,8 +1,10 @@
 package com.example.mzxy.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,8 +19,8 @@ import com.example.mzxy.R;
 import com.example.mzxy.adapter.BasketAdapter;
 import com.example.mzxy.utils.CountEvent;
 import com.example.mzxy.utils.LaundryUtils;
+import com.example.mzxy.utils.ListLaundry;
 import com.example.mzxy.view.HomeActivity;
-import com.example.mzxy.welcome.MyApplication;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -59,7 +61,7 @@ public class FragmentBasket extends Fragment implements View.OnClickListener {
         basket_item = View.inflate(getActivity(), R.layout.fragment_basket_item, null);
         basket_item_price = (TextView) basket_item.findViewById(R.id.basket_item_price);
         basket_item_finally_price = (TextView) basket_item.findViewById(R.id.basket_item_finally_price);
-        adapter = new BasketAdapter(getActivity(), MyApplication.washJavas, basket_item, bg_null);
+        adapter = new BasketAdapter(getActivity(), ListLaundry.washJavas, basket_item, bg_null);
         basket_list.setAdapter(adapter);
         priceCount();
         adapter.notifyDataSetChanged();
@@ -71,9 +73,9 @@ public class FragmentBasket extends Fragment implements View.OnClickListener {
     public void onEvent(CountEvent event) {
         int count = event.getCount();
         if (count == 4) {
-            if (MyApplication.washJavas.size() == 0 && basket_list != null) {
+            if (ListLaundry.washJavas.size() == 0 && basket_list != null) {
                 bg_null.setVisibility(View.VISIBLE);
-            } else if (MyApplication.washJavas.size() != 0) {
+            } else if (ListLaundry.washJavas.size() != 0) {
                 bg_null.setVisibility(View.GONE);
             }
             basket_list.setAdapter(adapter);
@@ -83,8 +85,8 @@ public class FragmentBasket extends Fragment implements View.OnClickListener {
     }
 
     private void priceCount() {
-        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-            LaundryUtils utils = MyApplication.washJavas.get(i);
+        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+            LaundryUtils utils = ListLaundry.washJavas.get(i);
             String utilsAmounts = utils.getAmounts().substring(1);
             String utilsCount = utils.getCount();
             int mAmounts = Integer.valueOf(utilsAmounts);
@@ -109,9 +111,31 @@ public class FragmentBasket extends Fragment implements View.OnClickListener {
                 activity.back();
                 break;
             case R.id.basket_remove_all://删除订单
-                if (MyApplication.washJavas.size() != 0) {
-                    MyApplication.washJavas.removeAll(MyApplication.washJavas);
-                    adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+                if (ListLaundry.washJavas.size() != 0) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                    dialog.setTitle("温馨提示");
+                    dialog.setMessage("您是否要清空购物车？");
+                    dialog.setCancelable(true);
+                    dialog.setPositiveButton("确认", new DialogInterface. OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ListLaundry.washJavas.removeAll(ListLaundry.washJavas);
+                            adapter.notifyDataSetChanged();
+                            Toast toast = Toast.makeText(getActivity(),"已清空购物车",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.BOTTOM ,0, 200);
+                            toast.show();
+                        }
+                    });
+                    dialog.setNegativeButton("取消", new DialogInterface. OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast toast = Toast.makeText(getActivity(),"已取消",Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.BOTTOM ,0, 200);
+                            toast.show();
+                        }
+                    });
+                    dialog.show();
                 } else {
                     Toast toast = Toast.makeText(getActivity(),"洗衣篮已经是空的~",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.BOTTOM ,0, 200);

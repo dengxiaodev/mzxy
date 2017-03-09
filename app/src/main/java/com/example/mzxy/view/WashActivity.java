@@ -15,7 +15,6 @@ import com.example.mzxy.fragment.FragmentCoat;
 import com.example.mzxy.fragment.FragmentSpring;
 import com.example.mzxy.fragment.FragmentSummer;
 import com.example.mzxy.fragment.FragmentWinter;
-import com.example.mzxy.welcome.GetDataByVolley;
 
 import java.util.ArrayList;
 
@@ -174,7 +173,6 @@ public class WashActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GetDataByVolley.cancelRequest("WashActivity");
     }
     //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {

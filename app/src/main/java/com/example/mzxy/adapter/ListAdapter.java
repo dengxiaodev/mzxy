@@ -4,15 +4,15 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
+import com.example.mzxy.utils.GlideCircleTransform;
 import com.example.mzxy.utils.ListUtils;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Administrator on 2017/2/16 0016.
@@ -48,7 +48,7 @@ public class ListAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = View.inflate(context, R.layout.coat_adapter_item, null);
-            holder.imageHead = (CircleImageView) convertView.findViewById(R.id.head);
+            holder.imageHead = (ImageView) convertView.findViewById(R.id.head);
             holder.textName = (TextView) convertView.findViewById(R.id.name);
             holder.textSignature = (TextView) convertView.findViewById(R.id.signature);
             convertView.setTag(holder);
@@ -56,14 +56,20 @@ public class ListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         ListUtils.UserInfoBean info = list.get(position);
-        Glide.with(context).load(info.getHead()).into(holder.imageHead);
+        Glide.with(context)
+                .load(info.getHead())
+                .transform(new GlideCircleTransform(context))
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.error)
+                .into(holder.imageHead);
+
         holder.textName.setText(info.getName());
         holder.textSignature.setText(info.getSignature());
         return convertView;
     }
 
     public class ViewHolder {
-        public CircleImageView imageHead;
+        public ImageView imageHead;
         public TextView textName;
         public TextView textSignature;
     }

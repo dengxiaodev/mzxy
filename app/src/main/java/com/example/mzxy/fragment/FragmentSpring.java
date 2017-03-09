@@ -1,6 +1,8 @@
 package com.example.mzxy.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,22 +19,23 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
 import com.example.mzxy.adapter.WinterAdapter;
+import com.example.mzxy.utils.HttpUtils;
 import com.example.mzxy.utils.LaundryUtils;
+import com.example.mzxy.utils.ListLaundry;
 import com.example.mzxy.utils.WinterJean;
 import com.example.mzxy.view.HomeActivity;
-import com.example.mzxy.welcome.GetDataByVolley;
-import com.example.mzxy.welcome.MyApplication;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static com.example.mzxy.R.mipmap.laundry;
 
@@ -60,7 +63,16 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
     private int num;
     private int i = 1;
     private LaundryUtils laundryUtils;
-
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    initPopwindow();
+                    break;
+            }
+        }
+    };
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,7 +84,7 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
     private void init() {
         springGridView = (GridView) view.findViewById(R.id.spring_grid_view);
         basketImage = (ImageView) view.findViewById(R.id.basket_image);
-        if (MyApplication.washJavas.size() != 0) {
+        if (ListLaundry.washJavas.size() != 0) {
             basketImage.setImageResource(R.mipmap.laundry_dot);
         } else {
             basketImage.setImageResource(laundry);
@@ -134,18 +146,26 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            GetDataByVolley.getStringByGet(URL, "spring", new GetDataByVolley.CallBack() {
+            HttpUtils.sendOKHttpRequest(URL, new Callback() {
                 @Override
-                public void returnData(Object result) {
-                    if (result == null) {
-                        Toast.makeText(getContext(), "加载失败，请重试", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Gson gson = new Gson();
-                        WinterJean winterJean = gson.fromJson((String) result, WinterJean.class);
-                        infoEntityList = new ArrayList<WinterJean.WashInfoEntity>();
-                        infoEntityList = winterJean.washInfo;
-                        initPopwindow();
-                    }
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "加载失败，请重试", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseText = response.body().string();
+                    Gson gson = new Gson();
+                    WinterJean winterJean = gson.fromJson(responseText, WinterJean.class);
+                    infoEntityList = new ArrayList<WinterJean.WashInfoEntity>();
+                    infoEntityList = winterJean.washInfo;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            handler.sendEmptyMessage(1);
+                        }
+                    });
                 }
             });
         }
@@ -153,17 +173,11 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
 
 
     private void showPopWindow(int position) {
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(
-                getActivity()).threadPoolSize(5).build();
-        ImageLoader.getInstance().init(configuration);
-        //ImageLoader配置
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.error)
-                .displayer(new FadeInBitmapDisplayer(100))
-                .displayer(new RoundedBitmapDisplayer(50))
-                .build();
-        //头像
-        ImageLoader.getInstance().displayImage(infoEntityList.get(position).getWashHead(), fr_home_picture, options);
+        Glide.with(this)
+                .load(infoEntityList.get(position).getWashHead())
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.error)
+                .into(fr_home_picture);
         fr_home_bag.setText(infoEntityList.get(position).getWashName());
         fr_home_amounts.setText(infoEntityList.get(position).getAmount());
     }
@@ -199,9 +213,8 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
                     String name = (String) fr_home_bag.getText();
                     Log.e("Spring", "件洗" + isRepeat);
                     if (isRepeat) {
-                        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-                            laundryUtils = MyApplication.washJavas.get(positionCount);
-//                            laundryUtils = MyApplication.washJavas.get(i);
+                        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+                            laundryUtils = ListLaundry.washJavas.get(positionCount);
                             if (name.equals(laundryUtils.getPictureName())) {
                                 String s1 = laundryUtils.getCount();
                                 int a1 = Integer.parseInt(s1);
@@ -214,15 +227,14 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
                     } else {
                         LaundryUtils utils = new LaundryUtils();
                         utils.setPicture(infoEntityList.get(positionCount).getWashHead());
-//                        utils.setPicture(infoEntityList.get(i).getWashHead());
                         utils.setCount((String) fr_home_num.getText());
                         utils.setPictureName((String) fr_home_bag.getText());
                         utils.setAmounts((String) fr_home_amounts.getText());
-                        MyApplication.washJavas.add(utils);
+                        ListLaundry.washJavas.add(utils);
                     }
                     Toast.makeText(getContext(), "已加入洗衣篮", Toast.LENGTH_SHORT).show();
                     fr_home_num.setText("1");
-                    if (MyApplication.washJavas.size() != 0) {
+                    if (ListLaundry.washJavas.size() != 0) {
                         basketImage.setImageResource(R.mipmap.laundry_dot);
                     } else {
                         basketImage.setImageResource(R.mipmap.laundry);
@@ -235,8 +247,8 @@ public class FragmentSpring extends Fragment implements View.OnClickListener {
 
     private Boolean isRepeatData() {
         String name = (String) fr_home_bag.getText();
-        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-            laundryUtils = MyApplication.washJavas.get(i);
+        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+            laundryUtils = ListLaundry.washJavas.get(i);
             if (name.equals(laundryUtils.getPictureName())) {
                 return true;
             }

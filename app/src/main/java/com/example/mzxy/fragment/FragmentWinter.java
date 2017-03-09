@@ -2,6 +2,8 @@ package com.example.mzxy.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,17 +23,20 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
 import com.example.mzxy.adapter.WinterAdapter;
+import com.example.mzxy.utils.HttpUtils;
 import com.example.mzxy.utils.LaundryUtils;
+import com.example.mzxy.utils.ListLaundry;
 import com.example.mzxy.utils.WinterJean;
 import com.example.mzxy.view.HomeActivity;
-import com.example.mzxy.welcome.GetDataByVolley;
-import com.example.mzxy.welcome.MyApplication;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static anetwork.channel.http.NetworkSdkSetting.context;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class FragmentWinter extends Fragment implements View.OnClickListener {
     private View view;
@@ -39,7 +44,7 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
     private ProgressBar progressBar;
     private final String URL = "http://cloud.bmob.cn/d9f6840be6bb07cf/wash_test?clive=wash";
     private List<WinterJean.WashInfoEntity> infoEntityList;
-
+    private int positionCount;
     private View popView;
     private PopupWindow window;
     private TextView unit;
@@ -53,6 +58,22 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
     private int num;
     private int i = 1;
     private LaundryUtils laundryUtils;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    progressBar.setVisibility(View.INVISIBLE);
+                    break;
+                case 2:
+                    progressBar.setVisibility(View.INVISIBLE);
+                    break;
+                case 3:
+                    initPopwindow();
+                    break;
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,6 +126,7 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                positionCount = position;
                 showPopWindow(position);
                 if (window != null && window.isShowing()) {
                     window.dismiss();
@@ -117,9 +139,11 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
     }
 
     private void showPopWindow(int position) {
-        Glide.with(context).load(infoEntityList.get(position).getWashHead()).into(fr_home_picture);
-
-//        fr_home_picture.setImageUrl(infoEntityList.get(position).getWashHead(), R.mipmap.ic_launcher, R.mipmap.error);
+        Glide.with(this)
+                .load(infoEntityList.get(position).getWashHead())
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.error)
+                .into(fr_home_picture);
         fr_home_bag.setText(infoEntityList.get(position).getWashName());
         fr_home_amounts.setText(infoEntityList.get(position).getAmount());
     }
@@ -127,20 +151,23 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            GetDataByVolley.getStringByGet(URL, "winter", new GetDataByVolley.CallBack() {
+            HttpUtils.sendOKHttpRequest(URL, new Callback() {
                 @Override
-                public void returnData(Object result) {
-                    if (result == null) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                    } else {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Gson gson = new Gson();
-                        WinterJean winterJean = gson.fromJson((String) result, WinterJean.class);
-                        infoEntityList = new ArrayList<WinterJean.WashInfoEntity>();
-                        infoEntityList = winterJean.washInfo;
-                        initPopwindow();
-                    }
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                    handler.sendEmptyMessage(1);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    handler.sendEmptyMessage(2);
+                    String responseText = response.body().string();
+                    Gson gson = new Gson();
+                    WinterJean winterJean = gson.fromJson(responseText,WinterJean.class);
+                    infoEntityList = new ArrayList<WinterJean.WashInfoEntity>();
+                    infoEntityList = winterJean.washInfo;
+                    handler.sendEmptyMessage(3);
                 }
             });
         }
@@ -177,9 +204,8 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
                     String name = (String) fr_home_bag.getText();
                     Log.e("Spring", "件洗" + isRepeat);
                     if (isRepeat) {
-                        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-//                            laundryUtils = MyApplication.washJavas.get(positionCount);
-                            laundryUtils = MyApplication.washJavas.get(i);
+                        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+                            laundryUtils = ListLaundry.washJavas.get(positionCount);
                             if (name.equals(laundryUtils.getPictureName())) {
                                 String s1 = laundryUtils.getCount();
                                 int a1 = Integer.parseInt(s1);
@@ -191,12 +217,11 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
                         }
                     } else {
                         LaundryUtils utils = new LaundryUtils();
-//                        utils.setPicture(infoEntityList.get(positionCount).getWashHead());
-                        utils.setPicture(infoEntityList.get(i).getWashHead());
+                        utils.setPicture(infoEntityList.get(positionCount).getWashHead());
                         utils.setCount((String) fr_home_num.getText());
                         utils.setPictureName((String) fr_home_bag.getText());
                         utils.setAmounts((String) fr_home_amounts.getText());
-                        MyApplication.washJavas.add(utils);
+                        ListLaundry.washJavas.add(utils);
                     }
                     Toast.makeText(getContext(), "已加入洗衣篮", Toast.LENGTH_SHORT).show();
                     fr_home_num.setText("1");
@@ -208,8 +233,8 @@ public class FragmentWinter extends Fragment implements View.OnClickListener {
 
     private Boolean isRepeatData() {
         String name = (String) fr_home_bag.getText();
-        for (int i = 0; i < MyApplication.washJavas.size(); i++) {
-            laundryUtils = MyApplication.washJavas.get(i);
+        for (int i = 0; i < ListLaundry.washJavas.size(); i++) {
+            laundryUtils = ListLaundry.washJavas.get(i);
             if (name.equals(laundryUtils.getPictureName())) {
                 return true;
             }

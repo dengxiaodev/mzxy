@@ -2,22 +2,25 @@ package com.example.mzxy.view;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.mzxy.R;
 import com.example.mzxy.adapter.MeansAdapter;
+import com.example.mzxy.utils.HttpUtils;
 import com.example.mzxy.utils.Means;
-import com.example.mzxy.welcome.GetDataByVolley;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import java.io.IOException;
 import java.util.List;
 
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MeansActivity extends SwipeBackActivity {
     private PullToRefreshListView mPullRefreshListView;
@@ -25,6 +28,7 @@ public class MeansActivity extends SwipeBackActivity {
     private List<Means.MeansInfoBean> list;
     private String url = "http://cloud.bmob.cn/d9f6840be6bb07cf/service_test?clive=means";
     private SwipeBackLayout mSwipeBackLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,19 +36,26 @@ public class MeansActivity extends SwipeBackActivity {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeSize(500);
         mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_refresh_list);
-        GetDataByVolley.getStringByGet(url, "means", new GetDataByVolley.CallBack() {
+        HttpUtils.sendOKHttpRequest(url, new Callback() {
             @Override
-            public void returnData(Object result) {
-                if (result == null) {
-                    Toast.makeText(MeansActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                } else {
-                    Gson gson = new Gson();
-                    Means means = gson.fromJson((String) result, Means.class);
-                    list = means.MeansInfo;
-                    adapter = new MeansAdapter(MeansActivity.this, list);
-                    mPullRefreshListView.setAdapter(adapter);
-                    Log.e("MeansActivity", "" + result);
-                }
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Toast.makeText(MeansActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                Gson gson = new Gson();
+                Means means = gson.fromJson(responseText, Means.class);
+                list = means.MeansInfo;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter = new MeansAdapter(MeansActivity.this, list);
+                        mPullRefreshListView.setAdapter(adapter);
+                    }
+                });
             }
         });
         /** 设置PullToRefresh
@@ -65,20 +76,26 @@ public class MeansActivity extends SwipeBackActivity {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 if (list != null) {
                     list.clear();
-                    GetDataByVolley.getStringByGet(url, "means", new GetDataByVolley.CallBack() {
+                    HttpUtils.sendOKHttpRequest(url, new Callback() {
                         @Override
-                        public void returnData(Object result) {
-                            if (result == null) {
-                                Toast.makeText(MeansActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Gson gson = new Gson();
-                                Means means = gson.fromJson((String) result, Means.class);
-                                list = means.MeansInfo;
-                                adapter = new MeansAdapter(MeansActivity.this, list);
-                                mPullRefreshListView.setAdapter(adapter);
-                                //设置刷新完成
-//                                mPullRefreshListView.onRefreshComplete();
-                            }
+                        public void onFailure(Call call, IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(MeansActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            String responseText = response.body().string();
+                            Gson gson = new Gson();
+                            Means means = gson.fromJson(responseText, Means.class);
+                            list = means.MeansInfo;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter = new MeansAdapter(MeansActivity.this, list);
+                                    mPullRefreshListView.setAdapter(adapter);
+                                }
+                            });
                         }
                     });
                     new Handler().postDelayed(new Runnable() {
@@ -92,21 +109,25 @@ public class MeansActivity extends SwipeBackActivity {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                GetDataByVolley.getStringByGet(url, "means", new GetDataByVolley.CallBack() {
+                HttpUtils.sendOKHttpRequest(url, new Callback() {
                     @Override
-                    public void returnData(Object result) {
-                        if (result == null) {
-                            Toast.makeText(MeansActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Gson gson = new Gson();
-                            Means means = gson.fromJson((String) result, Means.class);
-                            for (int i = 0; i < means.MeansInfo.size(); i++) {
-                                Means.MeansInfoBean infoBean = means.MeansInfo.get(i);
-                                list.add(infoBean);
-                            }
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MeansActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseText = response.body().string();
+                        Gson gson = new Gson();
+                        Means means = gson.fromJson(responseText, Means.class);
+                        for (int i = 0; i < means.MeansInfo.size(); i++) {
+                            Means.MeansInfoBean infoBean = means.MeansInfo.get(i);
+                            list.add(infoBean);
                         }
                     }
                 });
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -121,6 +142,5 @@ public class MeansActivity extends SwipeBackActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        GetDataByVolley.cancelRequest("means");
     }
 }

@@ -55,8 +55,11 @@ public class WinterAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         WinterJean.WashInfoEntity infoEntity = list.get(position);
-//        holder.springImage.setImageUrl(infoEntity.getWashHead(),R.mipmap.ic_launcher,R.mipmap.error);
-        Glide.with(context).load(infoEntity.getWashHead()).into(holder.springImage);
+        Glide.with(context)
+                .load(infoEntity.getWashHead())
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.error)
+                .into(holder.springImage);
         holder.springName.setText(infoEntity.getWashName());
         holder.springAmount.setText(infoEntity.getAmount());
         return convertView;

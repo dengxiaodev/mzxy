@@ -11,15 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.mzxy.R;
 import com.example.mzxy.utils.LaundryUtils;
 import com.example.mzxy.view.PayActivity;
 import com.example.mzxy.view.RegisterActivity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.List;
 
@@ -124,15 +120,11 @@ public class BasketAdapter extends BaseAdapter implements View.OnClickListener {
                     }
                 }
             });
-//            ImageLoader初始化
-            ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(
-                    context).threadPoolSize(5).build();
-            ImageLoader.getInstance().init(configuration);
-            //ImageLoader配置
-            DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.mipmap.error)
-                    .displayer(new FadeInBitmapDisplayer(100)).displayer(new RoundedBitmapDisplayer(50)).build();
-            //ImageLoader异步加载
-            ImageLoader.getInstance().displayImage(utils.getPicture(), fr_basket_clothes, options);
+            Glide.with(context)
+                    .load(utils.getPicture())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.error)
+                    .into(fr_basket_clothes);
             fr_basket_font.setText(utils.getPictureName());
             fr_basket_num.setText(utils.getCount());
             fr_basket_amounts.setText(utils.getAmounts());
